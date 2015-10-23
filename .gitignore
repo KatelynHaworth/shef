@@ -1,0 +1,9 @@
+# IntelliJ
+.idea/
+
+# Vim
+.swp
+
+# Maven/SBT
+target
+project/target
