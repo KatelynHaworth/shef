@@ -1,7 +1,7 @@
 package au.id.haworth.shef
 
 import java.io.StringReader
-import java.security.Security
+import java.security.{Signature, PrivateKey, Security}
 import java.text.SimpleDateFormat
 import java.util.{Date, TimeZone}
 
@@ -10,11 +10,8 @@ import org.apache.commons.codec.digest.DigestUtils
 import org.apache.http.client.methods._
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.HttpClientBuilder
-import org.bouncycastle.crypto.util.PrivateKeyFactory
-import org.bouncycastle.crypto.CipherParameters
-import org.bouncycastle.crypto.digests.SHA1Digest
-import org.bouncycastle.crypto.signers.RSADigestSigner
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
 import org.bouncycastle.openssl.{PEMKeyPair, PEMParser}
 
 /**
@@ -29,15 +26,15 @@ object ChefUtils {
    * Builds a Cipher Private Key from a RSA PEM string
    *
    * @param pemString The string version of the RSA PEM file
-   * @return CipherParameters
+   * @return PrivateKey
    */
-  def privateKeyFromPEMString(pemString: String): CipherParameters = {
+  def privateKeyFromPEMString(pemString: String): PrivateKey = {
     val pemParser = new PEMParser(new StringReader(pemString))
 
     val keyPair = pemParser.readObject().asInstanceOf[PEMKeyPair]
     pemParser.close()
 
-    PrivateKeyFactory.createKey(keyPair.getPrivateKeyInfo)
+    new JcaPEMKeyConverter().getPrivateKey(keyPair.getPrivateKeyInfo)
   }
 
   /**
@@ -47,16 +44,18 @@ object ChefUtils {
    * @param key The private key to sign the string with
    * @return String
    */
-  def signString(s: String, key: CipherParameters): String = {
+  def signString(s: String, key: PrivateKey): String = {
     Security.addProvider(new BouncyCastleProvider())
 
     val stringData = s.getBytes("UTF-8")
 
-    val signer = new RSADigestSigner(new SHA1Digest())
-    signer.init(true, key)
+    val signer = Signature.getInstance("RSA", "BC")
+    signer.initSign(key)
     signer.update(stringData, 0, stringData.length)
 
-    val encodedSignature = Base64.encodeBase64(signer.generateSignature())
+    val encodedSignature = Base64.encodeBase64(
+      signer.sign()
+    )
 
     new String(encodedSignature)
   }
@@ -189,6 +188,7 @@ object ChefUtils {
     request.addHeader("X-Ops-Sign",             "algorithm=sha1;version=1.0")
     request.addHeader("X-Ops-Timestamp",        requestTimestamp)
     request.addHeader("X-Ops-Content-Hash",     encodeAndHashString(requestContent))
+    request.addHeader("X-Ops-Server-API-Info",  "1")
     request.addHeader("Accept",                 "application/json")
 
     if(requestMethod == POST || requestMethod == PUT) {
