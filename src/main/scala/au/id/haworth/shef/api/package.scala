@@ -5,6 +5,8 @@ import spray.json.{DefaultJsonProtocol, JsArray, JsFalse, JsNull, JsNumber, JsOb
 import spray.json.lenses.JsonLenses._
 import spray.json.DefaultJsonProtocol._
 
+import scala.language.reflectiveCalls
+
 /**
   * Defines package-wide items for
   * the API package
@@ -25,14 +27,14 @@ package object api {
     * @param `override` Defines attributes that have the highest precedence
     */
   case class Node(
-                   name:              String,
-                   chef_environment:  Option[String]            = None,
-                   run_list:          Option[List[String]]      = None,
-                   automatic:         Option[Map[String, Any]]  = None,
-                   normal:            Option[Map[String, Any]]  = None,
-                   default:           Option[Map[String, Any]]  = None,
-                   `override`:        Option[Map[String, Any]]  = None
-                 )
+    name:              String,
+    chef_environment:  Option[String]            = None,
+    run_list:          Option[List[String]]      = None,
+    automatic:         Option[Map[String, Any]]  = None,
+    normal:            Option[Map[String, Any]]  = None,
+    default:           Option[Map[String, Any]]  = None,
+    `override`:        Option[Map[String, Any]]  = None
+  )
 
   /**
     * Defines a Role registered with the Chef Server
@@ -41,15 +43,32 @@ package object api {
     * @param description Defines a short description of the role
     * @param run_list Defines the cookbooks/roles that make up this role
     * @param default_attributes Defines the default attributes for this role
-    * @param override_attributes Defines the overriden attributes for this role
+    * @param override_attributes Defines the overridden attributes for this role
     */
   case class Role(
-                   name:                String,
-                   description:         String,
-                   run_list:            List[String],
-                   default_attributes:  Option[Map[String, Any]]  = None,
-                   override_attributes: Option[Map[String, Any]]  = None
-                 )
+    name:                String,
+    description:         String,
+    run_list:            List[String],
+    default_attributes:  Option[Map[String, Any]]  = None,
+    override_attributes: Option[Map[String, Any]]  = None
+  )
+
+  /**
+    * Defines a Environment registered with the Chef Server
+    *
+    * @param name Defines the name of the environment
+    * @param description Defines a short description of the environment
+    * @param cookbook_versions Defines a list of cookbook version to lock the versions used in this environment
+    * @param default_attributes Defines the default attributes for this environment
+    * @param override_attributes Defines the overridden attributes for this environment
+    */
+  case class Environment(
+    name:                 String,
+    description:          String,
+    cookbook_versions:    Option[Map[String, String]] = None,
+    default_attributes:   Option[Map[String, Any]]    = None,
+    override_attributes:  Option[Map[String, Any]]    = None
+  )
 
   /**
     * The Chef API JSON Protocol is used by
@@ -93,6 +112,11 @@ package object api {
       * Defines the JSON Format for: <code>Role</code>
       */
     implicit val roleJsonFormat: RootJsonFormat[Role] = jsonFormat5(Role)
+
+    /**
+      * Defines the JSON Format for: <code>Environment</code>
+      */
+    implicit val environmentJsonFormat: RootJsonFormat[Environment] = jsonFormat5(Environment)
   }
 
   /**
