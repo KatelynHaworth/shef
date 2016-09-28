@@ -15,7 +15,7 @@ import scala.concurrent.Future
   */
 protected[shef] trait NodesAPI extends ChefAPI {
 
-  import chefClient.{ec, defaultPipeline}
+  import chefClient.{ec, defaultPipeline, organizationName => org}
 
   /**
     * Requests from the Chef API a list of nodes
@@ -23,11 +23,11 @@ protected[shef] trait NodesAPI extends ChefAPI {
     *
     * @return A map of Name -> URL entries
     */
-  def getNodeList: Future[Map[String, String]] = {
+  def getNodesList: Future[Map[String, String]] = {
     val nodesPipeline: (HttpRequest) => Future[Map[String, String]] =
       defaultPipeline ~> unmarshal[Map[String, String]]
 
-    nodesPipeline(Get(s"/organizations/${chefClient.organization}/nodes"))
+    nodesPipeline(Get(s"/organizations/$org/nodes"))
   }
 
   /**
@@ -37,7 +37,7 @@ protected[shef] trait NodesAPI extends ChefAPI {
     * @return Returns the name of the node and its Chef API URL
     */
   def createNode(node: Node): Future[HttpResponse] =
-    defaultPipeline(Post(s"/organizations/${chefClient.organization}/nodes", node))
+    defaultPipeline(Post(s"/organizations/$org/nodes", node))
 
   /**
     * Requests detail informaton about a node from
@@ -50,7 +50,7 @@ protected[shef] trait NodesAPI extends ChefAPI {
     val nodePipeline: (HttpRequest) => Future[Node] =
       defaultPipeline ~> unmarshal[Node]
 
-    nodePipeline(Get(s"/organizations/${chefClient.organization}/nodes/$nodeName"))
+    nodePipeline(Get(s"/organizations/$org/nodes/$nodeName"))
   }
 
   /**
@@ -64,7 +64,7 @@ protected[shef] trait NodesAPI extends ChefAPI {
     val updatePipeline: (HttpRequest) => Future[Node] =
       defaultPipeline ~> unmarshal[Node]
 
-    updatePipeline(Put(s"/organizations/${chefClient.organization}/nodes/$name"))
+    updatePipeline(Put(s"/organizations/$org/nodes/$name"))
   }
 
   /**
@@ -77,6 +77,6 @@ protected[shef] trait NodesAPI extends ChefAPI {
     val deletePipeline: (HttpRequest) => Future[Node] =
       defaultPipeline ~> unmarshal[Node]
 
-    deletePipeline(Delete(s"/organizations/${chefClient.organization}/nodes/$name"))
+    deletePipeline(Delete(s"/organizations/$org/nodes/$name"))
   }
 }

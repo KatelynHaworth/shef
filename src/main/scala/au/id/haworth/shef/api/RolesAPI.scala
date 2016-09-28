@@ -15,7 +15,7 @@ import scala.concurrent.Future
   */
 protected[shef] trait RolesAPI extends ChefAPI {
 
-  import chefClient.{ec, defaultPipeline}
+  import chefClient.{ec, defaultPipeline, organizationName => org}
 
   /**
     * Requests a list of roles from the Chef API
@@ -26,7 +26,7 @@ protected[shef] trait RolesAPI extends ChefAPI {
     val rolesPipeline: (HttpRequest) => Future[Map[String, String]] =
       defaultPipeline ~> unmarshal[Map[String, String]]
 
-    rolesPipeline(Get(s"/organizations/${chefClient.organization}/roles"))
+    rolesPipeline(Get(s"/organizations/$org/roles"))
   }
 
   /**
@@ -35,7 +35,7 @@ protected[shef] trait RolesAPI extends ChefAPI {
     * @param role The role and its settings to send to the API
     * @return Returns response from the server
     */
-  def createRole(role: Role): Future[HttpResponse] = defaultPipeline(Post(s"/organizations/${chefClient.organization}/roles"))
+  def createRole(role: Role): Future[HttpResponse] = defaultPipeline(Post(s"/organizations/$org/roles"))
 
   /**
     * Requests information about a role from the Chef API
@@ -47,7 +47,7 @@ protected[shef] trait RolesAPI extends ChefAPI {
     val getRolePipeline: (HttpRequest) => Future[Role] =
       defaultPipeline ~> unmarshal[Role]
 
-    getRolePipeline(Get(s"/organizations/${chefClient.organization}/roles/$name"))
+    getRolePipeline(Get(s"/organizations/$org/roles/$name"))
   }
 
   /**
@@ -62,7 +62,7 @@ protected[shef] trait RolesAPI extends ChefAPI {
     val updateRolePipeline: (HttpRequest) => Future[Role] =
       defaultPipeline ~> unmarshal[Role]
 
-    updateRolePipeline(Put(s"/organizations/${chefClient.organization}/roles/$name", role))
+    updateRolePipeline(Put(s"/organizations/$org/roles/$name", role))
   }
 
   /**
@@ -75,6 +75,6 @@ protected[shef] trait RolesAPI extends ChefAPI {
     val deleteRolePipeline: (HttpRequest) => Future[Role] =
       defaultPipeline ~> unmarshal[Role]
 
-    deleteRolePipeline(Delete(s"/organizations/${chefClient.organization}/roles/$name"))
+    deleteRolePipeline(Delete(s"/organizations/$org/roles/$name"))
   }
 }
