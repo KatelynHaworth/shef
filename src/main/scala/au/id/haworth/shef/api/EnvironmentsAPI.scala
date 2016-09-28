@@ -9,7 +9,7 @@ import scala.concurrent.Future
 
 /**
   * Defines the API endpoint methods
-  * relating to "Roles" in the Chef API.
+  * relating to "Environments" in the Chef API.
   *
   * @author Liam Haworth
   */
