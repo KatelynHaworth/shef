@@ -112,13 +112,13 @@ object ChefUtils {
     * @return String
     */
   protected[shef] def buildCanonicalHeader(method: String, path: String, content: String, client: String, timestamp: String): String = {
-    val hashedPath = encodeAndHashString(path)
+    val hashedPath = encodeAndHashString(canonicalPath(path))
     val hashedContent = encodeAndHashString(content)
 
     s"Method:$method\n" +
     s"Hashed Path:$hashedPath\n" +
     s"X-Ops-Content-Hash:$hashedContent\n" +
     s"X-Ops-Timestamp:$timestamp\n" +
-    s"X-Ops-UserId:$client"
+    s"X-Ops-UserId:${encodeAndHashString(client)}"
   }
 }

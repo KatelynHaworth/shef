@@ -3,18 +3,10 @@ package au.id.haworth.shef
 import java.security.PrivateKey
 
 import akka.actor.ActorSystem
-import akka.io.IO
-import akka.pattern._
-import akka.util.Timeout
 import au.id.haworth.shef.api.NodesAPI
-import spray.can.Http
-import spray.can.Http.HostConnectorInfo
 import spray.client.pipelining._
 import spray.http.HttpHeaders.RawHeader
 import spray.http._
-
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
 
 /**
   * Provides an easier way to build a ChefClient
@@ -101,12 +93,12 @@ class ChefClient(host: String, val organization: String, client: String, clientK
 
     val headers = addHeader("X-Ops-UserId",           client) ~>
                   addHeader("X-Chef-Version",         "0.10.4") ~>
-                  addHeader("X-Ops-Sign",             "algorithm=sha1;version=1.0") ~>
+                  addHeader("X-Ops-Sign",             "algorithm=sha1;version=1.1") ~>
                   addHeader("X-Ops-Timestamp",        timetamp) ~>
                   addHeader("X-Ops-Content-Hash",     ChefUtils.encodeAndHashString(req.entity.data.asString(HttpCharsets.`UTF-8`))) ~>
                   addHeader("X-Ops-Server-API-Info",  "1") ~>
                   addHeaders(authHeaderSegments.indices.map( i =>
-                    RawHeader(s"X-Ops-Authorization-$i", authHeaderSegments(i))
+                    RawHeader(s"X-Ops-Authorization-${i+1}", authHeaderSegments(i))
                   ).toList)
 
     headers.apply(req)
