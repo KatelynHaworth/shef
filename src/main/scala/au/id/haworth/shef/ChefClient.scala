@@ -6,7 +6,7 @@ import akka.actor.ActorSystem
 import akka.pattern.ask
 import akka.io.IO
 import akka.util.Timeout
-import au.id.haworth.shef.api.NodesAPI
+import au.id.haworth.shef.api.{ChefAPIException, NodesAPI}
 import spray.can.Http
 import spray.can.Http.{HostConnectorInfo, HostConnectorSetup}
 import spray.client.pipelining._
@@ -114,7 +114,8 @@ class ChefClient(host: String, val organization: String, client: String, clientK
     * Defines a pipeline to handle errors sent back from the API server
     */
   protected[shef] val mapResponseErrors = (res: HttpResponse) => {
-    res
+    if(res.status.isSuccess) res
+    else throw ChefAPIException(res)
   }
 
   /**

@@ -3,7 +3,7 @@ package au.id.haworth.shef.api
 import spray.client.pipelining._
 import spray.httpx.SprayJsonSupport._
 import spray.json.DefaultJsonProtocol._
-import spray.http.{HttpRequest, HttpResponse}
+import spray.http.HttpRequest
 
 import scala.concurrent.Future
 
