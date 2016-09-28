@@ -64,7 +64,7 @@ object ChefClient {
   * @param ssl Defines if requests to the API should be encrypt via SSL
   * @author Liam Haworth
   */
-class ChefClient(host: String, val organization: String, client: String, clientKey: PrivateKey, port: Int, ssl: Boolean) (implicit val system: ActorSystem)
+class ChefClient(host: String, protected[shef] val organization: String, client: String, clientKey: PrivateKey, port: Int, ssl: Boolean) (protected[shef] implicit val system: ActorSystem)
       extends NodesAPI {
 
   /**
