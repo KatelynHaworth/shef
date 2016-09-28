@@ -15,21 +15,14 @@ import scala.concurrent.Future
   */
 protected[shef] abstract class NodesAPI extends ChefAPI {
 
-  import chefClient.{connectionBase, addChefHeaders, system, ec}
+  import chefClient.{ec, defaultPipeline}
 
-  def getNodeList(): Future[Map[String, String]] = {
+  def getNodeList: Future[Map[String, String]] = {
     val nodesPipeline: HttpRequest => Future[Map[String, String]] = {
-        addChefHeaders ~>
-        logRequest({ req =>
-          println(req)
-        }) ~>
-        sendReceive ~>
-        logResponse({ res =>
-          println(res)
-        }) ~>
-        unmarshal[Map[String, String]]
+      defaultPipeline ~>
+      unmarshal[Map[String, String]]
     }
 
-    nodesPipeline(Get(s"$connectionBase/organizations/${chefClient.organization}/nodes"))
+    nodesPipeline(Get(s"/organizations/${chefClient.organization}/nodes"))
   }
 }
