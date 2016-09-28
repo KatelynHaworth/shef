@@ -13,7 +13,7 @@ import scala.concurrent.Future
   *
   * @author Liam Haworth
   */
-protected[shef] abstract class NodesAPI extends ChefAPI {
+protected[shef] trait NodesAPI extends ChefAPI {
 
   import chefClient.{ec, defaultPipeline}
 
