@@ -3,7 +3,7 @@ package au.id.haworth.shef.api
 import spray.client.pipelining._
 import spray.httpx.SprayJsonSupport._
 import au.id.haworth.shef.api.ChefApiJSONProtocol._
-import spray.http.HttpRequest
+import spray.http.{HttpRequest, HttpResponse}
 
 import scala.concurrent.Future
 
@@ -30,6 +30,14 @@ protected[shef] abstract class NodesAPI extends ChefAPI {
 
     nodesPipeline(Get(s"/organizations/${chefClient.organization}/nodes"))
   }
+
+  /**
+    * Informs the Chef API of a new Node and its settings
+    *
+    * @param node The node to register with the Chef API server
+    * @return Returns the name of the node and its Chef API URL
+    */
+  def createNode(node: Node): Future[HttpResponse] = defaultPipeline(Post(s"/organizations/${chefClient.organization}/nodes", node))
 
   /**
     * Requests detail informaton about a node from
