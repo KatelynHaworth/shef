@@ -25,13 +25,30 @@ package object api {
     * @param `override` Defines attributes that have the highest precedence
     */
   case class Node(
-                   name: String,
+                   name:              String,
                    chef_environment:  Option[String]            = None,
                    run_list:          Option[List[String]]      = None,
                    automatic:         Option[Map[String, Any]]  = None,
                    normal:            Option[Map[String, Any]]  = None,
                    default:           Option[Map[String, Any]]  = None,
                    `override`:        Option[Map[String, Any]]  = None
+                 )
+
+  /**
+    * Defines a Role registered with the Chef Server
+    *
+    * @param name Defines the name of the role
+    * @param description Defines a short description of the role
+    * @param run_list Defines the cookbooks/roles that make up this role
+    * @param default_attributes Defines the default attributes for this role
+    * @param override_attributes Defines the overriden attributes for this role
+    */
+  case class Role(
+                   name:                String,
+                   description:         String,
+                   run_list:            List[String],
+                   default_attributes:  Option[Map[String, Any]]  = None,
+                   override_attributes: Option[Map[String, Any]]  = None
                  )
 
   /**
@@ -71,6 +88,11 @@ package object api {
       * Defines the JSON Format for: <code>Node</code>
       */
     implicit val nodeJsonFormat: RootJsonFormat[Node] = jsonFormat7(Node)
+
+    /**
+      * Defines the JSON Format for: <code>Role</code>
+      */
+    implicit val roleJsonFormat: RootJsonFormat[Role] = jsonFormat5(Role)
   }
 
   /**
