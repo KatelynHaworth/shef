@@ -8,6 +8,8 @@ import spray.json.DefaultJsonProtocol._
 /**
   * Defines package-wide items for
   * the API package
+  *
+  * @author Liam Haworth
   */
 package object api {
 

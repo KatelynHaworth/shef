@@ -11,11 +11,9 @@ import spray.can.Http.{HostConnectorInfo, HostConnectorSetup}
 import spray.client.pipelining._
 import spray.http.HttpHeaders.RawHeader
 import spray.http.{HttpRequest, _}
-import spray.httpx.SprayJsonSupport._
 import au.id.haworth.shef.api.{ChefAPIException, NodesAPI}
-import au.id.haworth.shef.api.ChefApiJSONProtocol._
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
 import scala.concurrent.duration._
 
 /**
