@@ -24,7 +24,15 @@ package object api {
     * @param default Defines the attributes provided as defaults in cookbooks
     * @param `override` Defines attributes that have the highest precedence
     */
-  case class Node(name: String, chef_environment: String, run_list: List[String], automatic: Map[String, Any], normal: Map[String, Any], default: Map[String, Any], `override`: Map[String, Any])
+  case class Node(
+                   name: String,
+                   chef_environment:  Option[String]            = None,
+                   run_list:          Option[List[String]]      = None,
+                   automatic:         Option[Map[String, Any]]  = None,
+                   normal:            Option[Map[String, Any]]  = None,
+                   default:           Option[Map[String, Any]]  = None,
+                   `override`:        Option[Map[String, Any]]  = None
+                 )
 
   /**
     * The Chef API JSON Protocol is used by
