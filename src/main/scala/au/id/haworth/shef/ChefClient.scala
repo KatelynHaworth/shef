@@ -6,14 +6,16 @@ import akka.actor.ActorSystem
 import akka.pattern.ask
 import akka.io.IO
 import akka.util.Timeout
-import au.id.haworth.shef.api.{ChefAPIException, NodesAPI}
 import spray.can.Http
 import spray.can.Http.{HostConnectorInfo, HostConnectorSetup}
 import spray.client.pipelining._
 import spray.http.HttpHeaders.RawHeader
-import spray.http._
+import spray.http.{HttpRequest, _}
+import spray.httpx.SprayJsonSupport._
+import au.id.haworth.shef.api.{ChefAPIException, NodesAPI}
+import au.id.haworth.shef.api.ChefApiJSONProtocol._
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
 /**
