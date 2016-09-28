@@ -19,7 +19,7 @@ request with what you think might be the solution.
 To contribute, just follow these steps:
 
   1. Fork from the `stable` branch
-  2. Create a new `feature`/`
+  2. Create a new `feature`/`bugfix` with a relevant name to the issue being worked on
   3. Implemented your changes
   4. Ensure all tests pass (See `TESTING.md`)
   5. Updated the `Authors and Copyright` table, add your name, email and copyright statement
