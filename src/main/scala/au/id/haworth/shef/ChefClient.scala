@@ -11,7 +11,7 @@ import spray.can.Http.{HostConnectorInfo, HostConnectorSetup}
 import spray.client.pipelining._
 import spray.http.HttpHeaders.RawHeader
 import spray.http.{HttpRequest, _}
-import au.id.haworth.shef.api.{ChefAPIException, NodesAPI, RolesAPI}
+import au.id.haworth.shef.api.{ChefAPIException, EnvironmentsAPI, NodesAPI, RolesAPI}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -66,7 +66,8 @@ object ChefClient {
   */
 class ChefClient(host: String, organization: String, client: String, clientKey: PrivateKey, port: Int, ssl: Boolean) (implicit system: ActorSystem)
       extends NodesAPI
-      with    RolesAPI {
+      with    RolesAPI
+      with    EnvironmentsAPI {
 
   /**
     * Defines the timeout for generating host connector information
